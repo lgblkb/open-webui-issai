@@ -1,6 +1,7 @@
 import { dev } from '$app/environment';
 // import { version } from '../../package.json';
 
+//APP NAME
 export const APP_NAME = 'ISSAI LLM Playground';
 export const WEBUI_BASE_URL = dev ? `http://${location.hostname}:8080` : ``;
 
