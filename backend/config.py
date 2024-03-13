@@ -23,7 +23,7 @@ try:
 except ImportError:
     print("dotenv not installed, skipping...")
 
-WEBUI_NAME = "Open WebUI"
+WEBUI_NAME = "ISSAI LLM Playground"
 shutil.copyfile("../build/favicon.png", "./static/favicon.png")
 
 ####################################
