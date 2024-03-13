@@ -12,6 +12,7 @@
 	export let initNewChat: Function;
 	export let title: string = $WEBUI_NAME;
 	export let shareEnabled: boolean = false;
+	const shareAllowed: boolean = false;
 
 	export let tags = [];
 	export let addTag: Function;
@@ -106,7 +107,7 @@
 			</div>
 
 			<div class="pl-2 self-center flex items-center space-x-2">
-				{#if shareEnabled}
+				{#if shareEnabled && shareAllowed}
 					<Tags {tags} {deleteTag} {addTag} />
 
 					<button

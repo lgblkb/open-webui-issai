@@ -312,7 +312,9 @@
 		>
 			<Sidebar />
 			<SettingsModal bind:show={$showSettings} />
-			<ChangelogModal bind:show={$showChangelog} />
+			{#if $user.role === 'admin'}
+				<ChangelogModal bind:show={$showChangelog} />
+			{/if}
 			<slot />
 		</div>
 	</div>
