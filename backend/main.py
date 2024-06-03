@@ -293,7 +293,7 @@ async def get_manifest_json():
         "background_color": "#343541",
         "theme_color": "#343541",
         "orientation": "portrait-primary",
-        "icons": [{"src": "/favicon.png", "type": "image/png", "sizes": "844x884"}],
+        "icons": [{"src": "/favicon.svg", "type": "image/png", "sizes": "844x884"}],
     }
 
 

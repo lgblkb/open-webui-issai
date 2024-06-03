@@ -73,7 +73,7 @@ const isLoadingStore = createIsLoadingStore(i18next);
 
 export const getLanguages = async () => {
 	const languages = (await import(`./locales/languages.json`)).default;
-	return languages;
+	return languages.filter(language => ['en-US', 'ru-RU', 'kz-KZ'].includes(language.code));
 };
 export default i18n;
 export const isLoading = isLoadingStore;

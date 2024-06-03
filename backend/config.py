@@ -25,10 +25,10 @@ try:
 except ImportError:
     log.warning("dotenv not installed, skipping...")
 
-WEBUI_NAME = os.environ.get("WEBUI_NAME", "Open WebUI")
-WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
+WEBUI_NAME = os.environ.get("WEBUI_NAME", "ISSAI LLM Playground")
+WEBUI_FAVICON_URL = "https://openwebui.com/favicon.svg"
 
-shutil.copyfile("../build/favicon.png", "./static/favicon.png")
+shutil.copyfile("../build/favicon.svg", "./static/favicon.svg")
 
 ####################################
 # ENV (dev,test,prod)
@@ -165,7 +165,7 @@ if CUSTOM_NAME:
 
                 r = requests.get(url, stream=True)
                 if r.status_code == 200:
-                    with open("./static/favicon.png", "wb") as f:
+                    with open("./static/favicon.svg", "wb") as f:
                         r.raw.decode_content = True
                         shutil.copyfileobj(r.raw, f)
 
@@ -173,9 +173,10 @@ if CUSTOM_NAME:
     except Exception as e:
         log.exception(e)
         pass
-else:
-    if WEBUI_NAME != "Open WebUI":
-        WEBUI_NAME += " (Open WebUI)"
+# removed Open WebUI text
+# else:
+#     if WEBUI_NAME != "Open WebUI":
+#         WEBUI_NAME += " (Open WebUI)"
 
 ####################################
 # DATA/FRONTEND BUILD DIR
