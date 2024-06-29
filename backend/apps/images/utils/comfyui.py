@@ -190,14 +190,30 @@ class ImageGenerationPayload(BaseModel):
     width: int
     height: int
     n: int = 1
+    cfg_scale: Optional[float] = None
+    sampler: Optional[str] = None
+    scheduler: Optional[str] = None
+    sd3: Optional[bool] = None
 
 
 def comfyui_generate_image(
     model: str, payload: ImageGenerationPayload, client_id, base_url
 ):
-    host = base_url.replace("http://", "").replace("https://", "")
+    ws_url = base_url.replace("http://", "ws://").replace("https://", "wss://")
 
     comfyui_prompt = json.loads(COMFYUI_DEFAULT_PROMPT)
+
+    if payload.cfg_scale:
+        comfyui_prompt["3"]["inputs"]["cfg"] = payload.cfg_scale
+
+    if payload.sampler:
+        comfyui_prompt["3"]["inputs"]["sampler"] = payload.sampler
+
+    if payload.scheduler:
+        comfyui_prompt["3"]["inputs"]["scheduler"] = payload.scheduler
+
+    if payload.sd3:
+        comfyui_prompt["5"]["class_type"] = "EmptySD3LatentImage"
 
     comfyui_prompt["4"]["inputs"]["ckpt_name"] = model
     comfyui_prompt["5"]["inputs"]["batch_size"] = payload.n
@@ -217,7 +233,7 @@ def comfyui_generate_image(
 
     try:
         ws = websocket.WebSocket()
-        ws.connect(f"ws://{host}/ws?clientId={client_id}")
+        ws.connect(f"{ws_url}/ws?clientId={client_id}")
         log.info("WebSocket connection established.")
     except Exception as e:
         log.exception(f"Failed to connect to WebSocket server: {e}")
