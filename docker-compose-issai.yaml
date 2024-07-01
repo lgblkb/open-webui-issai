@@ -8,7 +8,7 @@ x-ollama-default: &ollama-default
   environment:
     OLLAMA_MAX_LOADED_MODELS: 10
     OLLAMA_MAX_QUEUE: 20
-    OLLAMA_NUM_PARALLEL: 12
+    OLLAMA_NUM_PARALLEL: 1
   # GPU support
   deploy:
     resources:
@@ -33,9 +33,6 @@ services:
   ollama-1:
     <<: *ollama-default
     container_name: ollama-1
-    ports:
-      - "${OLLAMA_WEBAPI_PORT-11434}:11434"
-
   ollama-2:
     <<: *ollama-default
     container_name: ollama-2
@@ -51,18 +48,34 @@ services:
     volumes:
       - /storage/open-webui/backend_data:/app/backend/data
     depends_on:
-      - ollama_1
-      - ollama_2
+      - ollama-1
+      - ollama-2
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
       #      OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_BASE_URLS: "http://ollama-1:11434;http://ollama-2:11434"
       WEBUI_SECRET_KEY:
+      USE_CUDA_DOCKER: 1
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
 
+  db:
+    image: postgres:16.3
+    shm_size: 256mb
+    restart: always
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
 volumes:
   ollama: { }
+  postgres_data: { }
 #  open-webui: {}
